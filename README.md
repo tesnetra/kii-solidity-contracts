@@ -1,13 +1,5 @@
-# Sample Hardhat Project
+# sKII Internal Swap Contract
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+This has NOT been audited.  Use at your own risk.
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.ts
-```
+This is a simple swap contract that utilizes the cosmos bank module on the Kii EVM testnet.  It is meant to swap EVM kii tokens with internal cosmos sKii tokens and vice versa.
