@@ -5,8 +5,8 @@ const config: HardhatUserConfig = {
   solidity: "0.8.24",
   networks: {
     kiichain: {
-      url: process.env.RPC_URL,
-      accounts: [process.env.PRIVATE_KEY || ''],
+      url: "https://a.sentry.testnet.kiivalidator.com:8645",
+      accounts: [""],
     },
   },
 };
