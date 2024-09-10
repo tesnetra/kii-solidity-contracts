@@ -8,8 +8,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 // ERC20 Smart contract
 contract InkiiToken is ERC20, Ownable {
     uint constant _decimals = 1 * (1 ** 18);
-    uint constant _initial_suply = 1_000_000 * (10 ** 18);
-    uint public constant inkiiConvetionRate = 15_000_000_000; // 1 INKII = 15.000M tkii
+    uint constant _initial_suply = 100_000_000 * (10 ** 18);
+    uint public inkiiConvetionRate = 15_000_000_000; // 1 INKII = 15.000M tkii
 
     constructor(
         address initialOwner
@@ -25,28 +25,40 @@ contract InkiiToken is ERC20, Ownable {
         return super.transfer(recipient, amount);
     }
 
-    // Allow an account spend tokens in another account's name
+    // Avoid transactions between users
     function transferFrom(
         address sender,
         address recipient,
         uint256 amount
-    ) public override onlyOwner returns (bool) {
+    ) public override returns (bool) {
+        require(
+            recipient == address(this),
+            "Transfer between users are not allowed"
+        );
         return super.transferFrom(sender, recipient, amount);
     }
 
     // Mint inkii with Kii into the contract balance
-    function mint() public payable onlyOwner {
-        require(msg.value > 0, "You need to send Kii tokens");
+    function mint(uint256 inkiiAmount) public onlyOwner {
+        // Calculate how many Kii I need to mint
+        uint256 requiredKii = inkiiAmount * inkiiConvetionRate;
+        require(
+            address(this).balance >= requiredKii,
+            "Not enougth kii in contract to mint inkii"
+        );
 
-        uint256 inkiiToMint = msg.value / inkiiConvetionRate;
-        _mint(address(this), inkiiToMint);
+        // Spend the Kii
+        payable(address(0)).transfer(requiredKii);
+
+        // Mint tokens
+        _mint(address(this), inkiiAmount);
     }
 
     // Transfer INKII tokens from contract to a recipient
     function transferFromContract(
         address recipient,
         uint256 amount
-    ) public onlyOwner {
+    ) external onlyOwner {
         require(
             balanceOf(address(this)) >= amount,
             "Not enough tokens in contract"
@@ -55,22 +67,17 @@ contract InkiiToken is ERC20, Ownable {
     }
 
     // Swap INKII by Kii in a specific wallet
-    function withdrawal(uint256 inkiiAmount, address wallet) public {
+    function withdrawal(uint256 inkiiAmount, address wallet) external {
         require(
             balanceOf(msg.sender) >= inkiiAmount,
             "Insufficient INKII balance"
-        );
-
-        require(
-            inkiiAmount >= 1_000_000,
-            "IKII value must be higher than 1.000.000"
         );
 
         // Calculate Kii to send
         uint256 kiiAmount = inkiiAmount * inkiiConvetionRate;
         require(
             address(this).balance >= kiiAmount,
-            "Contract has insufficient KII"
+            "Contract has insufficient KII to withdrawal"
         );
 
         // Receive sender's INKII
@@ -78,6 +85,13 @@ contract InkiiToken is ERC20, Ownable {
 
         // Send Kii from the contract to the sender
         payable(wallet).transfer(kiiAmount);
+    }
+
+    // Edit the convertion ratio
+    function editConvetionRate(uint ratio) public onlyOwner returns (bool) {
+        require(ratio > 0, "you must provide a valid convertion ratio");
+        inkiiConvetionRate = ratio;
+        return true;
     }
 
     // Allow the contract to Receive Kii from any wallet

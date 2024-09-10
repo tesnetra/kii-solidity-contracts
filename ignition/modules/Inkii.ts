@@ -1,9 +1,9 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
+require("dotenv").config();
+
 const InkiiModule = buildModule("InkiiModule", (m) => {
-  const inkii = m.contract("InkiiToken", [
-    "0xA18344d76Cf42dB408db7f27d1167BaeBeDFe1Ee",
-  ]);
+  const inkii = m.contract("InkiiToken", [`0x${process.env.OWNER_ADDRESS}`]);
 
   return { inkii };
 });

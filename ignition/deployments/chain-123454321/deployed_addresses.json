@@ -1,4 +1,5 @@
 {
   "SwapModule#Swap": "0xF948f57612E05320A6636a965cA4fbaed3147A0f",
-  "InkiiModule#InkiiToken": "0x8edF9A02Bf92baB6375FbA050d491dAC8eDAb609"
+  "InkiiModule#InkiiToken": "0x14440F68f93970aDfEe9Dbfe20ab014eF0585886",
+  "AirdropModule#PreSigningData": "0xc3071E91a2d82Ec5593d4e32CFa84F1c8C67866b"
 }
