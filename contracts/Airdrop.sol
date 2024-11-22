@@ -10,10 +10,13 @@ contract PreSigningData {
         address walletAddress;
         string referralCode;
         bool redempted;
+        string externalReferralCode;
     }
 
     mapping(address => UserData) private userRecords;
     mapping(string => address) private userReferrarCodes;
+    mapping(string => address[]) private referredUsers;
+    mapping(string => address) private shipNames;
 
     event UserRegistered(
         address indexed user,
@@ -27,7 +30,8 @@ contract PreSigningData {
         bool _agreeTnC,
         string memory _shipName,
         address _address,
-        string memory _referralCode
+        string memory _referralCode,
+        string memory _externalReferralCode
     ) public {
         require(bytes(_shipName).length > 0, "Ship name cannot be empty.");
         require(
@@ -38,6 +42,10 @@ contract PreSigningData {
             userReferrarCodes[_referralCode] == address(0),
             "Referral code already in use."
         );
+        require(
+            shipNames[_shipName] == address(0),
+            "This ship name is already taken"
+        );
 
         // Save user data into the mapping
         userRecords[_address] = UserData({
@@ -45,11 +53,23 @@ contract PreSigningData {
             shipName: _shipName,
             walletAddress: _address,
             referralCode: _referralCode,
-            redempted: false
+            redempted: false,
+            externalReferralCode: _externalReferralCode
         });
 
         // Associate the referrarCode with the address
         userReferrarCodes[_referralCode] = _address;
+
+        // Asociate the Shipname into the used shipNames
+        shipNames[_shipName] = _address;
+
+        // Whether the user send a referral code associate to it code
+        if (
+            bytes(_externalReferralCode).length > 0 &&
+            userReferrarCodes[_externalReferralCode] != address(0)
+        ) {
+            referredUsers[_externalReferralCode].push(_address);
+        }
 
         emit UserRegistered(
             _address,
@@ -92,6 +112,18 @@ contract PreSigningData {
 
         // Send Token
         payable(user.walletAddress).transfer(TOKEN_AMOUNT);
+    }
+
+    function isShipNameTaken(
+        string memory _shipName
+    ) public view returns (bool) {
+        return shipNames[_shipName] != address(0);
+    }
+
+    function getReferredAccounts(
+        string memory _referralCode
+    ) public view returns (address[] memory) {
+        return referredUsers[_referralCode];
     }
 
     // Allow the contract receive founds

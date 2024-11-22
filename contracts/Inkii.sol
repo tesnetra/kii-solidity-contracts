@@ -25,19 +25,6 @@ contract InkiiToken is ERC20, Ownable {
         return super.transfer(recipient, amount);
     }
 
-    // Avoid transactions between users
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) public override returns (bool) {
-        require(
-            recipient == address(this),
-            "Transfer between users are not allowed"
-        );
-        return super.transferFrom(sender, recipient, amount);
-    }
-
     // Mint inkii with Kii into the contract balance
     function mint(uint256 inkiiAmount) public onlyOwner {
         // Calculate how many Kii I need to mint
