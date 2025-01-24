@@ -11,18 +11,30 @@ contract OroToken is ERC20, Ownable {
     uint constant _initial_suply = 100_000_000 * (10 ** 18);
     uint public oroConvetionRate = 15_000_000_000; // 1 ORO = 15.000M ukii
 
+    address public pointerContract; // Address of the Pointer Contract
+
     constructor(
         address initialOwner
     ) ERC20("oro", "ORO") Ownable(initialOwner) {
         _mint(address(this), _initial_suply);
     }
 
-    // Overwrite transfer function, just the deployer address can transfer money
+    // Overwrite transfer function to allow owner and pointer contract
     function transfer(
         address recipient,
         uint256 amount
-    ) public override onlyOwner returns (bool) {
+    ) public override returns (bool) {
+        require(
+            msg.sender == owner() || msg.sender == pointerContract,
+            "Only owner or pointer contract can transfer tokens"
+        );
         return super.transfer(recipient, amount);
+    }
+
+    // Function to set the Pointer Contract address
+    function setPointerContract(address _pointerContract) external onlyOwner {
+        require(_pointerContract != address(0), "Invalid pointer address");
+        pointerContract = _pointerContract;
     }
 
     // Mint oro with Kii into the contract balance
@@ -31,7 +43,7 @@ contract OroToken is ERC20, Ownable {
         uint256 requiredKii = oroAmount * oroConvetionRate;
         require(
             address(this).balance >= requiredKii,
-            "Not enougth kii in contract to mint oro"
+            "Not enough kii in contract to mint oro"
         );
 
         // Spend the Kii
@@ -71,9 +83,9 @@ contract OroToken is ERC20, Ownable {
         payable(wallet).transfer(kiiAmount);
     }
 
-    // Edit the convertion ratio
+    // Edit the conversion ratio
     function editConvetionRate(uint ratio) public onlyOwner returns (bool) {
-        require(ratio > 0, "you must provide a valid convertion ratio");
+        require(ratio > 0, "You must provide a valid conversion ratio");
         oroConvetionRate = ratio;
         return true;
     }
