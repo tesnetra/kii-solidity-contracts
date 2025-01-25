@@ -37,12 +37,6 @@ contract Certifications is Ownable {
         uint256 _completedHours,
         string memory _email
     ) public onlyOwner {
-        require(
-            bytes(userCertificates[_identityDocument].identityDocument)
-                .length == 0,
-            "Certificate already exists"
-        );
-
         // Create certificate
         userCertificates[_identityDocument] = Certificate({
             name: _name,
