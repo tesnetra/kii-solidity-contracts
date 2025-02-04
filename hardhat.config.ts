@@ -6,9 +6,7 @@ const config: HardhatUserConfig = {
   networks: {
     kiichain: {
       url: "https://json-rpc.uno.sentry.testnet.v3.kiivalidator.com",
-      accounts: [
-        "0x79ae7e81503f375261afbf077e231c5f94d1018b5eb61b7d46f22c43d044627d",
-      ],
+      accounts: ["0x<YOUR_PRIVATE_KEY>"],
       timeout: 120000,
     },
   },
