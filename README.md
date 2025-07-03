@@ -69,4 +69,5 @@ This project is licensed under the [MIT License](https://opensource.org/licenses
 
 ---
 
-👉 Official repository: [KiiChain GitHub](https://github.com/KiiChain/kii-solidity-contracts)
+## 👉 Official repository
+[KiiChain GitHub](https://github.com/KiiChain/kii-solidity-contracts)
