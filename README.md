@@ -2,6 +2,11 @@
 
 This repository contains smart contracts for the KiiChain ecosystem, written in Solidity.
 
+## 📘 Introduction
+
+This is a simple swap contract that uses the Cosmos bank module on the Kii EVM testnet.
+This contract is designed to swap EVM Kii tokens for internal Cosmos Kii tokens and vice versa.
+
 ## 🚀 Getting Started
 
 Follow these steps to set up the development environment and test the contracts locally.
@@ -61,3 +66,8 @@ Please follow the instructions above to set up your environment and run tests lo
 
 ## 📄 License
 This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+
+---
+
+## 👉 Official repository
+[KiiChain GitHub](https://github.com/KiiChain/kii-solidity-contracts)
