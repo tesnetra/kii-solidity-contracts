@@ -14,7 +14,7 @@ Follow these steps to set up the development environment and test the contracts 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/tesnetra/kii-solidity-contracts.git
+git clone https://github.com/KiiChain/kii-solidity-contracts
 cd kii-solidity-contracts
 ```
 
